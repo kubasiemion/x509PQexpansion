@@ -8,60 +8,55 @@ import (
 	"io"
 )
 
-type PQPublicKey interface {
-	Equal(PQPublicKey) bool
-	GetOID() asn1.ObjectIdentifier
-	Bytes() []byte
-}
-
-type PQPrivateKey interface {
-	Public() crypto.PublicKey
-	Sign(rand io.Reader, digest []byte, opts crypto.SignerOpts) (signature []byte, err error)
-	GetOID() asn1.ObjectIdentifier
-	Bytes() []byte
-}
-
-type PQPrivateKeyStruct struct {
+type PQPrivateKey struct {
 	Privbytes    []byte
 	Pubbytes     []byte
 	OID          asn1.ObjectIdentifier
-	SingInternal func(PQPrivateKey, io.Reader, []byte, crypto.SignerOpts) ([]byte, error)
+	SingInternal func(*PQPrivateKey, io.Reader, []byte, crypto.SignerOpts) ([]byte, error)
 }
 
-func (pqpriv *PQPrivateKeyStruct) Bytes() []byte {
+func (pqpriv *PQPrivateKey) Bytes() []byte {
 	return pqpriv.Privbytes
 }
 
-func (pqpriv *PQPrivateKeyStruct) Public() crypto.PublicKey {
-	return &PQPublicKeyStruct{pqpriv.Pubbytes, pqpriv.OID}
+func (pqpriv *PQPrivateKey) Public() crypto.PublicKey {
+	return &PQPublicKey{pqpriv.Pubbytes, pqpriv.OID}
 }
 
-func (pqpriv *PQPrivateKeyStruct) GetOID() asn1.ObjectIdentifier {
+func (pqpriv *PQPrivateKey) GetOID() asn1.ObjectIdentifier {
 	return pqpriv.OID
 }
 
-func (pqpriv *PQPrivateKeyStruct) Sign(rand io.Reader, digest []byte, opts crypto.SignerOpts) ([]byte, error) {
+func (pqpriv *PQPrivateKey) Sign(rand io.Reader, digest []byte, opts crypto.SignerOpts) ([]byte, error) {
 	if pqpriv.SingInternal == nil {
 		return nil, fmt.Errorf("Signing function not set in PQK wrapper")
 	}
-	var pqinterface PQPrivateKey
-	pqinterface = pqpriv
-	return pqpriv.SingInternal(pqinterface, rand, digest, opts)
+
+	return pqpriv.SingInternal(pqpriv, rand, digest, opts)
 }
 
-type PQPublicKeyStruct struct {
+type PQPublicKey struct {
 	RawBytes []byte
 	OID      asn1.ObjectIdentifier
 }
 
-func (pqpb *PQPublicKeyStruct) GetOID() asn1.ObjectIdentifier {
+func (pqpb *PQPublicKey) GetOID() asn1.ObjectIdentifier {
 	return pqpb.OID
 }
 
-func (pqpb *PQPublicKeyStruct) Equal(p2 PQPublicKey) bool {
-	return pqpb.OID.Equal(p2.GetOID()) && bytes.Equal(pqpb.RawBytes, p2.Bytes())
+func (pqpb *PQPublicKey) Equal(p2 crypto.PublicKey) bool {
+	if pq2, ok := p2.(*PQPublicKey); !ok {
+		return false
+	} else {
+		return pqpb.OID.Equal(pq2.GetOID()) && bytes.Equal(pqpb.RawBytes, pq2.Bytes())
+	}
+
 }
 
-func (pqpb *PQPublicKeyStruct) Bytes() []byte {
+func (pqpb *PQPublicKey) Bytes() []byte {
 	return pqpb.RawBytes
+}
+
+func areKeyOIDandSigAlgoCompatible(key asn1.ObjectIdentifier, signAlgo SignatureAlgorithm) bool {
+	return true
 }

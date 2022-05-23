@@ -234,14 +234,14 @@ func parsePublicKey(algo PublicKeyAlgorithm, keyData *publicKeyInfo) (interface{
 		}
 		return pub, nil
 	case DilithiumR3:
-		return &PQPublicKeyStruct{RawBytes: der, OID: OidDilithiumRawHigh}, nil
+		return &PQPublicKey{RawBytes: der, OID: OidDilithiumRawHigh}, nil
 	default:
 		return nil, nil
 	}
 }
 
 func marshalPublicKey(pub interface{}) (publicKeyBytes []byte, publicKeyAlgorithm pkix.AlgorithmIdentifier, err error) {
-	if pqpub, ok := pub.(PQPublicKey); ok {
+	if pqpub, ok := pub.(*PQPublicKey); ok {
 		publicKeyBytes = pqpub.Bytes()
 		publicKeyAlgorithm.Algorithm = pqpub.GetOID()
 		return

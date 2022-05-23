@@ -1282,6 +1282,13 @@ func signingParamsForPublicKey(pub interface{}, requestedSigAlgo SignatureAlgori
 		pubType = Ed25519
 		sigAlgo.Algorithm = oidSignatureEd25519
 
+	case *PQPublicKey:
+
+		sigAlgo.Algorithm = pub.OID
+		sigAlgo.Parameters = asn1.NullRawValue
+		hashFunc = crypto.SHA512
+		pubType = DilithiumR3
+
 	default:
 		err = errors.New("x509: only RSA, ECDSA and Ed25519 keys supported")
 	}
