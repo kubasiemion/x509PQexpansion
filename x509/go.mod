@@ -1,4 +1,4 @@
-module github.com/kubasiemion/x509/x509hack
+module github.com/kubasiemion/x509expansion/x509
 
 go 1.17
 
