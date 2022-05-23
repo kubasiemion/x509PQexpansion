@@ -1,4 +1,4 @@
-module github.com/kubasiemion/x509expansion/x509
+module github.com/kubasiemion/x509PQexpansion/x509
 
 go 1.17
 

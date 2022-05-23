@@ -12,7 +12,7 @@ import (
 	"os"
 	"time"
 
-	"x509"
+	"github.com/kubasiemion/x509PQexpansion/x509"
 )
 
 func main() {
