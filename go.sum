@@ -1,3 +1,5 @@
+github.com/kubasiemion/x509PQexpansion/x509 v0.0.0-20220523103731-6e44c0b5d041 h1:YU12pWhKOF/j8gYgZ4pyAZNQouIcbI5ghm/mmMSqkdo=
+github.com/kubasiemion/x509PQexpansion/x509 v0.0.0-20220523103731-6e44c0b5d041/go.mod h1:GExGL/3Q5q3jsmKun/RTQ0i2TL4kP4vFCOsngPrfsKw=
 golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f h1:OeJjE6G4dgCY4PIXvIRQbE8+RX+uXZyGhUy/ksMGJoc=
 golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f/go.mod h1:IxCIyHEi3zRg3s0A5j5BB6A9Jmi73HwBIUl50j+osU4=
 golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
